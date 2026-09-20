@@ -32,6 +32,8 @@ jobs:
         run: |
           safety check -r requirements-dev.txt --full-report
   test:
+    needs: security
+    name: Run tests
     runs-on: ubuntu-24.04
     steps:
       # Récupérer le code
