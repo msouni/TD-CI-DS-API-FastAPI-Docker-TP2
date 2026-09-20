@@ -1,15 +1,15 @@
-name: CD – FastAPI
+name: CD–FastAPI
 
 on:
   workflow_run:
-    workflows: ["CI – FastAPI"]
+    workflows: ["CI–FastAPI"]
     types:
       - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-24.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push_request'  && github.event.workflow_run.head_branch == 'dev' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-ci_cd-f68:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-cd:latest
 
       # Déploiement sur un serveur distant (si configuré)
       #- name: Deploy to server
@@ -36,10 +36,10 @@ jobs:
       #    username: ${{ secrets.SSH_USER }}
       #    key: ${{ secrets.SSH_KEY }}
       #    script: |
-      #      docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-ci_cd-f68:latest
+      #      docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-cd:latest
       #      docker stop fastapi || true
       #      docker rm fastapi || true
-      #      docker run -d -p 8000:8000 --name fastapi ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-ci_cd-f68:latest
+      #      docker run -d -p 8000:8000 --name fastapi ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-td-cd:latest
       #- name: Vérification post-déploiement (smoke test)
       #  run: |
       #   echo "Attente du démarrage de l'application..."
